@@ -28,7 +28,5 @@ function countingSort(arr) {
     }
   }
 
-  console.log(result);
-
   return result;
 }
