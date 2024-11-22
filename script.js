@@ -51,6 +51,7 @@ function handleRestartClicked() {
 }
 
 function countingSort(arr) {
+  const originalArr = [...arr]; // Store a copy of the original array
   const max = Math.max(...arr);
   const countArr = Array(max + 1).fill(0);
   let delay = 0;
@@ -74,6 +75,13 @@ function countingSort(arr) {
     }
   }
 
+  // Final step to remove highlights
+  visualizeStep([...arr], "Sorting complete", delay, "sorting", -1);
+  visualizeStep([...countArr], "Counting complete", delay, "counting", -1);
+
+  visualizeStep([...originalArr], "Original array", delay, "original", -1);
+  visualizeStep([...arr], "Sorted array", delay, "sorted", -1);
+
   console.log("Sorted array is: ", arr);
 
   return arr;
@@ -85,9 +93,12 @@ function visualizeStep(array, message, delay, type, highlightIndex) {
       displayArrayAsBoxes(array, "countingArrayDisplay", highlightIndex);
     } else if (type === "sorting") {
       displayArrayAsBars(array, "arrayDisplay", highlightIndex);
+    } else if (type === "original") {
+      displayArrayAsBoxes(array, "originalArrayDisplay", highlightIndex);
+    } else if (type === "sorted") {
+      displayArrayAsBars(array, "sortedArrayDisplay", highlightIndex);
     }
-    const stepsContainer = document.querySelector("#steps");
-    stepsContainer.innerHTML = message;
+    document.querySelector("#steps").innerHTML = message;
   }, delay);
 }
 
@@ -103,6 +114,7 @@ function displayArrayAsBars(array, containerId, highlightIndex) {
     bar.style.display = "inline-block";
     bar.style.marginRight = "2px";
     bar.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#6b5b95";
+    bar.style.textAlign = "center";
 
     const label = document.createElement("label");
     label.classList.add("bar-label");
