@@ -110,9 +110,6 @@ function displayArrayAsBars(array, containerId, highlightIndex) {
     const bar = document.createElement("div");
     bar.classList.add("bar");
     bar.style.height = `${value * 20}px`;
-    bar.style.width = "30px";
-    bar.style.display = "inline-block";
-    bar.style.marginRight = "2px";
     bar.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#6b5b95";
     bar.style.textAlign = "center";
 
@@ -132,14 +129,7 @@ function displayArrayAsBoxes(array, containerId, highlightIndex) {
   array.forEach((value, index) => {
     const box = document.createElement("div");
     box.classList.add("box");
-    box.style.width = "30px";
-    box.style.height = "30px";
-    box.style.display = "inline-block";
-    box.style.marginRight = "2px";
     box.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#f0f0f0";
-    box.style.border = "1px solid #000";
-    box.style.textAlign = "center";
-    box.style.lineHeight = "30px";
 
     const label = document.createElement("label");
     label.classList.add("box-label");
