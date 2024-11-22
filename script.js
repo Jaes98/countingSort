@@ -1,6 +1,6 @@
 window.addEventListener("load", start);
 
-const arr = [1, 4, 1, 2, 7, 5, 2, 4];
+const arr = [1, 4, 1, 2, 7, 5, 2, 4, 8];
 const originalArr = [...arr];
 let delayValue = document.getElementById("speedSlider").value;
 
@@ -71,14 +71,15 @@ async function countingSort(arr) {
   const max = Math.max(...arr);
   const countArr = Array(max + 1).fill(0);
 
-  // Display the original unsorted array
-  visualizeStep([...arr], "Original array", "original", -1);
-  await delayDuration(delayValue);
-
   // Step 1: Count occurrences
   for (let i = 0; i < arr.length; i++) {
+    // Highlight the current element in the original array
+    visualizeStep([...arr], `Counting occurrences of ${arr[i]}`, "originalCounting", i);
+    await delayDuration(delayValue);
+
+    // Increment the count and visualize the counting array
     countArr[arr[i]]++;
-    visualizeStep([...countArr], `Counting occurrences of ${arr[i]}`, "counting", arr[i]);
+    visualizeStep([...countArr], `Incrementing count of ${arr[i]}`, "counting", arr[i]);
     await delayDuration(delayValue);
   }
 
@@ -88,7 +89,13 @@ async function countingSort(arr) {
     while (countArr[i] > 0) {
       arr[index] = i;
       index++;
+
+      // Decrement the count and visualize the updated counting array
       countArr[i]--;
+      visualizeStep([...countArr], `Decrementing count of ${i}`, "counting", i);
+      await delayDuration(delayValue);
+
+      // Visualize the placement in the sorted array
       visualizeStep([...arr], `Placing ${i} in array`, "sorting", index - 1);
       await delayDuration(delayValue);
     }
@@ -111,8 +118,10 @@ function visualizeStep(array, message, type, highlightIndex) {
     displayIndexLabels(array.length, "countingArrayIndexDisplay");
   } else if (type === "sorting") {
     displayArrayAsBars(array, "arrayDisplay", highlightIndex);
-  } else if (type === "original") {
+  } else if (type === "originalCounting") {
     displayArrayAsBars(array, "arrayDisplay", highlightIndex);
+  } else if (type === "original") {
+    displayArrayAsBars(array, "arrayDisplay", -1);
   }
   document.querySelector("#steps").innerHTML = message;
 }
@@ -125,7 +134,7 @@ function displayArrayAsBars(array, containerId, highlightIndex) {
     const bar = document.createElement("div");
     bar.classList.add("bar");
     bar.style.height = `${value * 20}px`;
-    bar.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#6b5b95";
+    bar.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#2e63e9";
 
     const label = document.createElement("label");
     label.classList.add("bar-label");

@@ -29,7 +29,7 @@ button {
   font-size: 16px;
   cursor: pointer;
   border: 1px solid, black;
-  border-radius: 5px;;
+  border-radius: 5px;
   color: #333;
   transition: background-color 0.3s, transform 0.3s;
 }
@@ -50,6 +50,10 @@ button:hover {
   margin-bottom: 10px;
   font-size: 14px;
   color: #000;
+}
+
+#steps {
+  padding: 5px;
 }
 
 .bar {
