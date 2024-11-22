@@ -1,5 +1,5 @@
 # countingSort algorithm with visualizer
 
-Dokumentation Kilder: 
-- https://en.wikipedia.org/wiki/Counting_sort
-- https://www.w3schools.com/dsa/dsa_algo_countingsort.php
+Github Pages live link: 
+
+- https://jaes98.github.io/countingSort/
