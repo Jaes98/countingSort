@@ -8,14 +8,17 @@ function start() {
   console.log("JS running");
 
   const startButton = document.getElementById("start_button");
-  const restartButton = document.getElementById("restart_button");
+  const resetButton = document.getElementById("reset_button");
+  const speedSlider = document.getElementById("speedSlider");
+  const speedValue = document.getElementById("speedValue");
 
   startButton.addEventListener("click", handleStartClicked);
-  restartButton.addEventListener("click", handleRestartClicked);
+  resetButton.addEventListener("click", handleResetClicked);
 
-  document.getElementById("speedSlider").addEventListener("input", function () {
-    console.log(delayValue);
+  speedSlider.addEventListener("input", function () {
     delayValue = this.value;
+    speedValue.textContent = `Animation speed (ms): ${this.value}`;
+    console.log(delayValue);
   });
 
   console.log("Original array is: ", arr);
@@ -38,8 +41,8 @@ async function handleStartClicked() {
   await countingSort(arr);
 }
 
-function handleRestartClicked() {
-  console.log("Restart clicked, resetting visuals and starting over...");
+function handleResetClicked() {
+  console.log("Reset clicked, resetting visuals and starting over...");
 
   // Reset the array to its original state
   arr.splice(0, arr.length, ...arr);
