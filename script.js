@@ -1,6 +1,8 @@
 window.addEventListener("load", start);
 
 const arr = [1, 4, 1, 2, 7, 5, 2];
+const originalArr = [...arr];
+let delayValue = document.getElementById("speedSlider").value;
 
 function start() {
   console.log("JS running");
@@ -10,6 +12,11 @@ function start() {
 
   startButton.addEventListener("click", handleStartClicked);
   restartButton.addEventListener("click", handleRestartClicked);
+
+  document.getElementById("speedSlider").addEventListener("input", function () {
+    console.log(delayValue);
+    delayValue = this.value;
+  });
 
   console.log("Original array is: ", arr);
 
@@ -22,27 +29,29 @@ function start() {
 
   // **Display the counting array as boxes**
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
+
+  displayArrayAsBoxes(arr, "originalArrayDisplay");
 }
 
-function handleStartClicked() {
+async function handleStartClicked() {
   console.log("Start clicked, the algorithm magic starts now...");
-  countingSort(arr);
+  await countingSort(arr);
 }
 
 function handleRestartClicked() {
   console.log("Restart clicked, resetting visuals and starting over...");
 
   // Reset the array to its original state
-  const originalArray = [1, 4, 1, 2, 7, 5, 2];
-  arr.splice(0, arr.length, ...originalArray);
+  arr.splice(0, arr.length, ...arr);
 
   // Clear the displays
   document.querySelector("#arrayDisplay").innerHTML = "";
   document.querySelector("#countingArrayDisplay").innerHTML = "";
   document.querySelector("#steps").innerHTML = "";
 
+  console.log("Original array is: ", originalArr);
   // Redisplay the unsorted array visually
-  displayArrayAsBars(arr, "arrayDisplay");
+  displayArrayAsBars(originalArr, "arrayDisplay");
 
   // **Reinitialize and display the counting array with zeros**
   const max = Math.max(...arr);
@@ -50,17 +59,19 @@ function handleRestartClicked() {
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
 }
 
-function countingSort(arr) {
-  const originalArr = [...arr]; // Store a copy of the original array
+async function countingSort(arr) {
   const max = Math.max(...arr);
   const countArr = Array(max + 1).fill(0);
-  let delay = 0;
+
+  // Display the original unsorted array
+  visualizeStep([...arr], "Original array", "original", -1);
+  await delayDuration(delayValue);
 
   // Step 1: Count occurrences
   for (let i = 0; i < arr.length; i++) {
     countArr[arr[i]]++;
-    visualizeStep([...countArr], `Counting occurrences of ${arr[i]}`, delay, "counting", arr[i]);
-    delay += 1000;
+    visualizeStep([...countArr], `Counting occurrences of ${arr[i]}`, "counting", arr[i]);
+    await delayDuration(delayValue);
   }
 
   // Step 2: Build the sorted array and update the original array
@@ -70,36 +81,31 @@ function countingSort(arr) {
       arr[index] = i;
       index++;
       countArr[i]--;
-      visualizeStep([...arr], `Placing ${i} in array`, delay, "sorting", index - 1);
-      delay += 1000;
+      visualizeStep([...arr], `Placing ${i} in array`, "sorting", index - 1);
+      await delayDuration(delayValue);
     }
   }
 
   // Final step to remove highlights
-  visualizeStep([...arr], "Sorting complete", delay, "sorting", -1);
-  visualizeStep([...countArr], "Counting complete", delay, "counting", -1);
-
-  visualizeStep([...originalArr], "Original array", delay, "original", -1);
-  visualizeStep([...arr], "Sorted array", delay, "sorted", -1);
+  visualizeStep([...arr], "Sorting complete", "sorting", -1);
+  visualizeStep([...countArr], "Counting complete", "counting", -1);
 
   console.log("Sorted array is: ", arr);
-
-  return arr;
 }
 
-function visualizeStep(array, message, delay, type, highlightIndex) {
-  setTimeout(() => {
-    if (type === "counting") {
-      displayArrayAsBoxes(array, "countingArrayDisplay", highlightIndex);
-    } else if (type === "sorting") {
-      displayArrayAsBars(array, "arrayDisplay", highlightIndex);
-    } else if (type === "original") {
-      displayArrayAsBoxes(array, "originalArrayDisplay", highlightIndex);
-    } else if (type === "sorted") {
-      displayArrayAsBars(array, "sortedArrayDisplay", highlightIndex);
-    }
-    document.querySelector("#steps").innerHTML = message;
-  }, delay);
+function delayDuration(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function visualizeStep(array, message, type, highlightIndex) {
+  if (type === "counting") {
+    displayArrayAsBoxes(array, "countingArrayDisplay", highlightIndex);
+  } else if (type === "sorting") {
+    displayArrayAsBars(array, "arrayDisplay", highlightIndex);
+  } else if (type === "original") {
+    displayArrayAsBars(array, "arrayDisplay", highlightIndex);
+  }
+  document.querySelector("#steps").innerHTML = message;
 }
 
 function displayArrayAsBars(array, containerId, highlightIndex) {
@@ -111,7 +117,6 @@ function displayArrayAsBars(array, containerId, highlightIndex) {
     bar.classList.add("bar");
     bar.style.height = `${value * 20}px`;
     bar.style.backgroundColor = index === highlightIndex ? "#FF4949" : "#6b5b95";
-    bar.style.textAlign = "center";
 
     const label = document.createElement("label");
     label.classList.add("bar-label");
