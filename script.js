@@ -1,6 +1,6 @@
 window.addEventListener("load", start);
 
-const arr = [1, 4, 1, 2, 7, 5, 2];
+const arr = [1, 4, 1, 2, 7, 5, 2, 4];
 const originalArr = [...arr];
 let delayValue = document.getElementById("speedSlider").value;
 
@@ -33,6 +33,9 @@ function start() {
   // **Display the counting array as boxes**
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
 
+  displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
+
+  // Display original array as boxes
   displayArrayAsBoxes(arr, "originalArrayDisplay");
 }
 
@@ -45,7 +48,7 @@ function handleResetClicked() {
   console.log("Reset clicked, resetting visuals and starting over...");
 
   // Reset the array to its original state
-  arr.splice(0, arr.length, ...arr);
+  arr.splice(0, arr.length, ...originalArr);
 
   // Clear the displays
   document.querySelector("#arrayDisplay").innerHTML = "";
@@ -60,6 +63,8 @@ function handleResetClicked() {
   const max = Math.max(...arr);
   const countArr = Array(max + 1).fill(0);
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
+
+  displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
 }
 
 async function countingSort(arr) {
@@ -103,6 +108,7 @@ function delayDuration(ms) {
 function visualizeStep(array, message, type, highlightIndex) {
   if (type === "counting") {
     displayArrayAsBoxes(array, "countingArrayDisplay", highlightIndex);
+    displayIndexLabels(array.length, "countingArrayIndexDisplay");
   } else if (type === "sorting") {
     displayArrayAsBars(array, "arrayDisplay", highlightIndex);
   } else if (type === "original") {
@@ -146,4 +152,16 @@ function displayArrayAsBoxes(array, containerId, highlightIndex) {
 
     container.appendChild(box);
   });
+}
+
+function displayIndexLabels(length, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = ""; // Clear previous content
+
+  for (let i = 0; i < length; i++) {
+    const label = document.createElement("div");
+    label.classList.add("index-label");
+    label.innerHTML = i;
+    container.appendChild(label);
+  }
 }
