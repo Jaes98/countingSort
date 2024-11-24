@@ -1,7 +1,7 @@
 window.addEventListener("load", start);
 
 const arr = [1, 4, 1, 2, 7, 5, 2, 4, 8];
-const originalArr = [...arr];
+const originalArray = [...arr];
 let delayValue = document.getElementById("speedSlider").value;
 
 // To visually display the counting of occurrences of values, an array is created and filled with 0s
@@ -32,9 +32,9 @@ function start() {
 }
 
 function clearDisplays() {
-  document.querySelector("#arrayDisplay").innerHTML = "";
-  document.querySelector("#countingArrayDisplay").innerHTML = "";
-  document.querySelector("#steps").innerHTML = "";
+  document.getElementById("arrayDisplay").innerHTML = "";
+  document.getElementById("countingArrayDisplay").innerHTML = "";
+  document.getElementById("steps").innerHTML = "";
 }
 
 async function handleStartClicked() {
@@ -43,12 +43,12 @@ async function handleStartClicked() {
 
 function handleResetClicked() {
   // Reset the array to its original state
-  arr.splice(0, arr.length, ...originalArr);
+  arr.splice(0, arr.length, ...originalArray);
 
   clearDisplays();
 
   // Redisplay the unsorted array visually
-  displayArrayAsBars(originalArr, "arrayDisplay");
+  displayArrayAsBars(originalArray, "arrayDisplay");
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
   displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
 }
@@ -106,12 +106,17 @@ function visualizeStep(array, message, type, highlightIndex) {
   } else if (type === "original") {
     displayArrayAsBars(array, "arrayDisplay", -1);
   }
-  document.querySelector("#steps").innerHTML = message;
+  document.getElementById("steps").innerHTML = message;
+}
+
+function clearContainer(containerId) {
+  const clearedContainer = document.getElementById(containerId);
+  clearedContainer.innerHTML = "";
+  return clearedContainer;
 }
 
 function displayArrayAsBars(array, containerId, highlightIndex) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = ""; // Clear previous content
+  const barContainer = clearContainer(containerId);
 
   array.forEach((value, index) => {
     const bar = document.createElement("div");
@@ -124,13 +129,12 @@ function displayArrayAsBars(array, containerId, highlightIndex) {
     label.innerHTML = value;
     bar.appendChild(label);
 
-    container.appendChild(bar);
+    barContainer.appendChild(bar);
   });
 }
 
 function displayArrayAsBoxes(array, containerId, highlightIndex) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = ""; // Clear previous content
+  const boxContainer = clearContainer(containerId);
 
   array.forEach((value, index) => {
     const box = document.createElement("div");
@@ -142,18 +146,17 @@ function displayArrayAsBoxes(array, containerId, highlightIndex) {
     label.innerHTML = value;
     box.appendChild(label);
 
-    container.appendChild(box);
+    boxContainer.appendChild(box);
   });
 }
 
 function displayIndexLabels(length, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = ""; // Clear previous content
+  const labelContainer = clearContainer(containerId);
 
   for (let i = 0; i < length; i++) {
     const label = document.createElement("div");
     label.classList.add("index-label");
     label.innerHTML = i;
-    container.appendChild(label);
+    labelContainer.appendChild(label);
   }
 }
