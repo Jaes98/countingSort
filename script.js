@@ -15,11 +15,13 @@ let resetFlag = false;
 function start() {
   console.log("JS running");
 
+  const submitArrayButton = document.getElementById("submitArrayButton");
   const startButton = document.getElementById("start_button");
   const resetButton = document.getElementById("reset_button");
   const speedSlider = document.getElementById("speedSlider");
   const speedValue = document.getElementById("speedValue");
 
+  submitArrayButton.addEventListener("click", handleArrayInput);
   startButton.addEventListener("click", handleStartClicked);
   resetButton.addEventListener("click", handleResetClicked);
 
@@ -72,6 +74,27 @@ async function countingSort(arr) {
 
   visualizeStep([...arr], "Sorting complete", "sorting", -1);
   visualizeStep([...countArr], "Counting complete", "counting", -1);
+}
+
+function handleArrayInput() {
+  const arrayInput = document.getElementById("arrayInput").value;
+  const newArray = arrayInput.split(",").map(Number);
+
+  if (newArray.some(isNaN)) {
+    alert("Please enter a valid array of numbers separated by commas.");
+    return;
+  }
+
+  arr.splice(0, arr.length, ...newArray);
+  originalArray.splice(0, originalArray.length, ...newArray);
+  countArr = new Array(Math.max(...newArray) + 1).fill(0);
+
+  clearDisplays();
+
+  displayArrayAsBars(newArray, "arrayDisplay");
+  displayArrayAsBoxes(countArr, "countingArrayDisplay");
+  displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
+  displayArrayAsBoxes(newArray, "originalArrayDisplay");
 }
 
 async function handleStartClicked() {
