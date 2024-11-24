@@ -4,6 +4,11 @@ const arr = [1, 4, 1, 2, 7, 5, 2, 4, 8];
 const originalArr = [...arr];
 let delayValue = document.getElementById("speedSlider").value;
 
+// To visually display the counting of occurrences of values, an array is created and filled with 0s
+// with a length of the maximum value in the original array + 1
+const max = Math.max(...arr);
+const countArr = Array(max + 1).fill(0);
+
 function start() {
   console.log("JS running");
 
@@ -17,60 +22,38 @@ function start() {
 
   speedSlider.addEventListener("input", function () {
     delayValue = this.value;
-    speedValue.textContent = `Animation speed (ms): ${this.value}`;
-    console.log(delayValue);
+    speedValue.textContent = `Animation speed (ms): ${delayValue}`;
   });
 
-  console.log("Original array is: ", arr);
-
-  // Display the unsorted array as bars
   displayArrayAsBars(arr, "arrayDisplay");
-
-  // **Initialize the counting array with zeros**
-  const max = Math.max(...arr);
-  const countArr = Array(max + 1).fill(0);
-
-  // **Display the counting array as boxes**
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
-
   displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
-
-  // Display original array as boxes
   displayArrayAsBoxes(arr, "originalArrayDisplay");
 }
 
+function clearDisplays() {
+  document.querySelector("#arrayDisplay").innerHTML = "";
+  document.querySelector("#countingArrayDisplay").innerHTML = "";
+  document.querySelector("#steps").innerHTML = "";
+}
+
 async function handleStartClicked() {
-  console.log("Start clicked, the algorithm magic starts now...");
   await countingSort(arr);
 }
 
 function handleResetClicked() {
-  console.log("Reset clicked, resetting visuals and starting over...");
-
   // Reset the array to its original state
   arr.splice(0, arr.length, ...originalArr);
 
-  // Clear the displays
-  document.querySelector("#arrayDisplay").innerHTML = "";
-  document.querySelector("#countingArrayDisplay").innerHTML = "";
-  document.querySelector("#steps").innerHTML = "";
+  clearDisplays();
 
-  console.log("Original array is: ", originalArr);
   // Redisplay the unsorted array visually
   displayArrayAsBars(originalArr, "arrayDisplay");
-
-  // **Reinitialize and display the counting array with zeros**
-  const max = Math.max(...arr);
-  const countArr = Array(max + 1).fill(0);
   displayArrayAsBoxes(countArr, "countingArrayDisplay");
-
   displayIndexLabels(countArr.length, "countingArrayIndexDisplay");
 }
 
 async function countingSort(arr) {
-  const max = Math.max(...arr);
-  const countArr = Array(max + 1).fill(0);
-
   // Step 1: Count occurrences
   for (let i = 0; i < arr.length; i++) {
     // Highlight the current element in the original array
