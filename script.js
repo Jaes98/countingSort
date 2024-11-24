@@ -9,6 +9,7 @@ let delayValue = document.getElementById("speedSlider").value;
 const max = Math.max(...arr);
 let countArr = Array(max + 1).fill(0);
 
+// Used to stop the ongoing animation if reset button is clicked
 let resetFlag = false;
 
 function start() {
@@ -34,7 +35,7 @@ function start() {
 }
 
 async function countingSort(arr) {
-  resetFlag = false; // Reset flag is set to false to prevent resetting the array during sorting
+  resetFlag = false;
 
   // Step 1: Count occurrences of values in the original array
   for (let i = 0; i < arr.length; i++) {
@@ -69,7 +70,6 @@ async function countingSort(arr) {
     }
   }
 
-  // Remove highlights from final display
   visualizeStep([...arr], "Sorting complete", "sorting", -1);
   visualizeStep([...countArr], "Counting complete", "counting", -1);
 }
@@ -79,10 +79,8 @@ async function handleStartClicked() {
 }
 
 function handleResetClicked() {
-  // Set the reset flag to true to stop the ongoing animation
   resetFlag = true;
 
-  // Reset the array to its original state
   arr.splice(0, arr.length, ...originalArray);
 
   countArr = new Array(Math.max(...originalArray) + 1).fill(0);
@@ -95,11 +93,12 @@ function handleResetClicked() {
 }
 
 function delayDuration(ms) {
+  // Delays the sorting algorithm based on ms value
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function visualizeStep(array, message, type, highlightIndex) {
-  if (resetFlag) return; // Check flag before updating visuals
+  if (resetFlag) return;
 
   if (type === "counting") {
     displayArrayAsBoxes(array, "countingArrayDisplay", highlightIndex);
